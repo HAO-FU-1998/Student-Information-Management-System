@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1" >
+		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="bootstrap-table/bootstrap-table.css" />
+		<script src="js/jquery-3.2.1.min.js"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="bootstrap-table/bootstrap-table.js"></script>
+		<script src="bootstrap-table/bootstrap-table-zh-CN.js"></script>
+		<title>学生课程操作</title>
+<!--		<script type="text/javascript" src="js/EmployeeManager.js"></script>-->
+
+		<script>//判断是否已经登录
+		$(function () {
+			$.get(
+					'user/iflogin' ,
+					function (response) {
+						if(null == response || response == "") {
+							alert("请先登录!") ;
+							location.href = "login.html" ;
+						}
+					}
+			);
+
+			//通过id或名字获取成绩
+			$("#getScoreBtn").click(function () {
+				$.get(
+						'score/getScore' ,
+						$("#getScore").serialize() ,
+						function(data) {
+							console.log(data) ;
+							var str = "";
+							$.each(data,function (i,val) {
+								str += "<tr>" +
+										"<td align='center'>" + val.courseid + "</td>" +
+										"<td align='center'>" + val.coursename + "</td>" +
+										"<td align='center'>" + val.score + "</td>" +
+										"<td align='center'>" + val.credit + "</td>" ;
+							})
+							tbody_course.innerHTML = str;
+						}
+				) ;
+			})
+
+			//通过studentID和courseID选课
+			$("#chooseCourseBtn").click(function () {
+				$.get(
+						'score/chooseCourse' ,
+						{studentid: $("#studentid").val(),
+						 courseid: $("#courseid").val()},
+						// $("#chooseCourse").serialize() ,
+						function(response) {
+							console.log(response) ;
+							if(response == false){
+								alert("选课失败");
+							}
+							else{
+								alert("选课成功");
+							}
+						}
+				) ;
+			})
+
+			//通过studentID和courseID退课
+			$("#quitCourseBtn").click(function () {
+				$.get(
+						'score/quitCourse' ,
+						{studentid: $("#studentid2").val(),
+							courseid: $("#courseid2").val()},
+						//$("#quitCourse").serialize() ,
+						function(response) {
+							console.log(response) ;
+							if(response == false){
+								alert("退课失败");
+							}
+							else{
+								alert("退课成功");
+							}
+						}
+				) ;
+			})
+
+			//通过studentID和courseID添加成绩
+			$("#enterScoreBtn").click(function () {
+				$.get(
+						'score/enterScore' ,
+						{studentid: $("#studentid3").val(),
+							courseid: $("#courseid3").val(),
+						score: $("#score").val()},
+						//$("#enterScore").serialize() ,
+						function(response) {
+							console.log(response) ;
+							if(response == false){
+								alert("录入失败");
+							}
+							else{
+								alert("录入成功");
+							}
+						}
+				) ;
+			})
+
+            //清空输入框里的内容
+            $("#searchReset").click(function () {
+                document.getElementById('input11').value = "";
+                document.getElementById('input22').value = "";
+            })
+		})
+
+
+		</script>
+	</head>
+	<body>
+		<div class="alert" style="background: #ddd;padding: 5px;">
+			<a href="shouye.html">主页</a>>>><a href="course.html">学生课程操作</a>
+		</div>
+		<div class="container">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3>学生选课查询</h3>
+					<form id="getScore" class="form-horizontal">
+						<div class="form-group" style="margin-top:15px">
+							<label class="control-label col-md-1">学生姓名</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" name="name" id="input11">
+							</div>
+							<label class="control-label col-md-1">学生学号</label>
+							<div class="col-md-2">
+								<input type="text" class="form-control" name="id" id="input22">
+							</div>
+							<div class="col-md-3" style="text-align:left;">
+								<button type="button" style="margin-left:50px" id="getScoreBtn" class="btn btn-primary">查询</button>
+								<button type="button" style="margin-left:10px" id="searchReset" class="btn btn-info">清空</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="panel-body" style="display: flex">
+					<div class="btn-group" style="flex:1">
+						<button class="btn btn-danger btn-sm glyphicon glyphicon-pencil" style="margin-left:50px" data-toggle="modal" data-target="#chooseCourse">添加课程</button>&nbsp;
+						<!-- 模态框（Modal） -->
+						<div class="modal fade" id="chooseCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<h4 class="modal-title">添加课程</h4>
+										</div>
+										<div class="modal-body" align="center">
+											<div class="input-group form-group">
+												<span class="input-group-addon">学生学号：</span>
+												<input type="text" class="form-control" placeholder="学生学号"  id="studentid">
+											</div><br /><br />
+											<div class="input-group form-group">
+												<span class="input-group-addon">课程编号：</span>
+												<input type="text" class="form-control" placeholder="课程编号" id="courseid">
+											</div>
+										</div>
+										<div class="modal-footer"  >
+											<div align="center">
+												<button id="chooseCourseBtn" type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+												<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+											</div>
+										</div>
+									</div><!-- /.modal-content -->
+								</div>
+						</div>
+					</div>
+					<div class="btn-group" style="flex:1">
+						<button class="btn btn-danger btn-sm glyphicon glyphicon-pencil" style="margin-left:50px" data-toggle="modal" data-target="#quitCourse">删除课程</button>&nbsp;
+						<!-- 模态框（Modal） -->
+						<div class="modal fade" id="quitCourse" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<h4 class="modal-title">删除课程</h4>
+										</div>
+										<div class="modal-body" align="center">
+											<div class="input-group form-group">
+												<span class="input-group-addon">学生学号：</span>
+												<input type="text" class="form-control" placeholder="学生学号"  id="studentid2">
+											</div><br /><br />
+											<div class="input-group form-group">
+												<span class="input-group-addon">课程编号：</span>
+												<input type="text" class="form-control" placeholder="课程编号" id="courseid2">
+											</div>
+										</div>
+										<div class="modal-footer"  >
+											<div align="center">
+												<button id="quitCourseBtn" type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+												<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+											</div>
+										</div>
+									</div><!-- /.modal-content -->
+								</div><!-- /.modal -->
+						</div>
+					</div>
+					<div class="btn-group" style="flex:1">
+						<button class="btn btn-danger btn-sm glyphicon glyphicon-pencil" style="margin-left:50px" data-toggle="modal" data-target="#enterScore">录入分数</button>&nbsp;
+						<!-- 模态框（Modal） -->
+						<div class="modal fade" id="enterScore" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+										<h4 class="modal-title">录入分数</h4>
+									</div>
+									<div class="modal-body" align="center">
+										<div class="input-group form-group">
+											<span class="input-group-addon">学生学号：</span>
+											<input type="text" class="form-control" placeholder="学生学号"  id="studentid3">
+										</div><br /><br />
+										<div class="input-group form-group">
+											<span class="input-group-addon">课程编号：</span>
+											<input type="text" class="form-control" placeholder="课程编号" id="courseid3">
+										</div><br /><br />
+										<div class="input-group form-group">
+											<span class="input-group-addon">课程成绩：</span>
+											<input type="text" class="form-control" placeholder="课程成绩"  id="score">
+										</div>
+									</div>
+									<div class="modal-footer"  >
+										<div align="center">
+											<button id="enterScoreBtn" type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+											<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+										</div>
+									</div>
+								</div><!-- /.modal-content -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	
+	<!--alert-warning -->
+	<div class="modal fade" id="alertDialog_warning" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="alert alert-warning">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					</h4>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	
+		
+</div>
+
+		<div style="margin-left: 5px;">
+			<div class="panel panel-default">
+				<div class=" panel-body">
+					<table class="table table-condensed table-hover table-bordered table-striped" id="table_course"><br />
+						<thead>
+						<tr >
+							<th align='center'>课程编号</th>
+							<th align='center'>课程名称</th>
+							<th align='center'>课程成绩</th>
+							<th align='center'>课程学分</th>
+						</tr>
+						</thead>
+						<tbody id="tbody_course" ></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

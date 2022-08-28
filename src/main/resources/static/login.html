@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>用户登录</title>
+		<link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+		<script src="bootstrap/js/jquery-3.2.1.min.js" type="text/javascript" charset="UTF-8"></script>
+	    <script src="bootstrap/js/bootstrap.min.js" type="text/javascript" charset="UTF-8"></script>
+		<style type="text/css">
+			body{
+				background: url("/img/1.jpg");
+				background-size: 100%;
+				background-repeat: no-repeat;
+				animation-name:myfirst;
+				animation-duration:12s;
+				/*变换时间*/
+				animation-delay:2s;
+				/*动画开始时间*/
+				animation-iteration-count:infinite;
+				/*下一周期循环播放*/
+				animation-play-state:running;
+				/*动画开始运行*/
+			}
+			@keyframes myfirst
+			{
+				0%   {background:url("/img/1.jpg");}
+				34%  {background:url("/img/2.jpg");}
+				67%  {background:url("/img/3.jpg");}
+				100% {background:url("/img/1.jpg");}
+			}
+
+			#logo {
+				font-weight: 600;
+				font-size: 28px;
+				font-family: "黑体";
+				color: #8c888b;
+				background: -webkit-linear-gradient(45deg, #70f7fe, #fbd7c6, #fdefac, #bfb5dd, #bed5f5);
+			-moz-linear-gradient(45deg, #70f7fe, #fbd7c6, #fdefac, #bfb5dd, #bed5f5);
+			-ms-linear-gradient(45deg, #70f7fe, #fbd7c6, #fdefac, #bfb5dd, #bed5f5);
+				color: transparent;
+				/*设置字体颜色透明*/
+				-webkit-background-clip: text;
+				/*背景裁剪为文本形式*/
+				animation: ran 10s linear infinite;
+				/*动态10s展示*/
+			}
+
+			@keyframes ran {
+				from {
+					backgroud-position: 0 0;
+				}
+				to {
+					background-position: 2000px 0;
+				}
+			}
+		</style>
+		<script>
+			$(function(){
+				function randomNumber(min,max){
+					return Math.floor(Math.random()*(max - min +1) + min);
+				}
+				$('#checkCode').text([randomNumber(1,100),'+',randomNumber(1,100),'= ?'].join(' '));
+				$('#loginform').submit(function(){
+					var $uname = $('#loginform [name=uname]');
+					var $pwd = $('#loginform [name=pwd]');
+					var flag = true;
+					if(!$uname.val()){
+						$uname.next().text('用户名不能为空!');
+						flag= false ;
+					}else{
+						$uname.next().empty();
+					}
+					if(!$pwd.val()){
+						$pwd.next().text('密码不能为空!');
+						flag =false;
+					}else{
+						$pwd.next().empty();
+					}
+					var items = $('#checkCode').text().split(' ');
+					var sum = parseInt(items[0])+parseInt(items[2]);
+					if(sum !=$('#vcode').val()){
+						$('#vcode').parent().next().text('验证码不正确')
+						flag=false;
+					}else{
+						$('#vcode').parent().next().empty();
+						flag=true;
+					}
+					console.log(flag);
+					if(flag){
+							$.post("user/logincheck", $("#loginform").serialize(),
+									function(data){
+										console.log(data);
+										if(null == data || "" == data) {
+											alert("登录失败!");
+										} else {
+											sessionStorage.setItem("userId" , data.id) ;
+											sessionStorage.setItem("userName" , data.username) ;
+											sessionStorage.setItem("avatar", data.avatar);
+											sessionStorage.setItem("user" ,JSON.stringify(data)) ;
+											location.href="main.html" ;
+										}
+									});
+					}
+					return	false;
+				});
+			})
+		</script>
+	</head>
+	<body>
+		<h1 id="logo" style="font-size: 100px" align="center">学生信息管理系统</h1>
+		<br /><br /><br /><br /><br /><br /><br />
+		<div class="container" style="margin-left: auto;margin-right: auto;width: 400px;background-color: rgba(240, 255, 255, 0.5);border-radius: 10px;text-align: center;">
+			<h1 class="text-center">用户登录</h1>
+			<form id="loginform" method="post" class="form-horizontal">
+			<div class="form-group" style="margin-left: auto;margin-right: auto;width:300px">
+				<input class="form-control" type="text" name="username" placeholder="请输入用户名"/>
+				<span style="color: red;"></span>
+			</div>
+			<div class="form-group" style="margin-left: auto;margin-right: auto;width:300px">
+				<input class="form-control" type="password" name="userpass" placeholder="请输入密码"/>
+				<span style="color: red;"></span>
+			</div>
+			<div class=" form-group ">
+				<div class="form-inline" style="margin-left: auto;margin-right: auto;width:300px">
+						<input style="width: 75%;" type="number" id="vcode" name="vcode" placeholder="请输入验证码" class="form-control" />
+						<span id="checkCode" style="color: red;">1+8=?</span>
+				</div>
+				<span style="color: red;"></span>
+			</div>
+			<div class="form-group" style="margin-left: auto;margin-right: auto;width:250px">
+				<button type="submit" class="form-control btn-primary">登录</button>
+			</div>
+			<div class="form-group" style="margin-left: auto;margin-right: auto;width:250px">
+			   <button type="button" class="form-control btn-danger" ><a href="register.html">注册</a></button>
+			</div>
+			</form>
+		</div>
+	</body>
+</html>
+

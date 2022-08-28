@@ -1,0 +1,315 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <title>数据统计</title>
+    <!-- 引入 echarts.js -->
+    <script src="js/echarts.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <link rel="stylesheet" href="css/font-awesome.css">
+
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.css">
+
+    <link rel="stylesheet" href="./css/ui-lightness/jquery-ui-1.8.21.custom.css">
+
+    <link rel="stylesheet" href="css/application.css">
+    <link rel="stylesheet" href="css/pages/dashboard.css">
+
+    <script type="text/javascript" src="bootstrap/js/jquery-3.2.1.min.js" charset="UTF-8" ></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js" charset="UTF-8" ></script>
+    <script src="js/libs/modernizr-2.5.3.min.js"></script>
+
+    <script src="js/libs/jquery-1.7.2.min.js"></script>
+    <script src="js/libs/jquery-ui-1.8.21.custom.min.js"></script>
+    <script src="js/libs/jquery.ui.touch-punch.min.js"></script>
+
+    <script src="js/libs/bootstrap/bootstrap.min.js"></script>
+
+    <script src="js/Theme.js"></script>
+    <script src="js/Charts.js"></script>
+
+    <script src="./js/plugins/excanvas/excanvas.min.js"></script>
+    <script src="./js/plugins/flot/jquery.flot.js"></script>
+    <script src="./js/plugins/flot/jquery.flot.pie.js"></script>
+    <script src="./js/plugins/flot/jquery.flot.orderBars.js"></script>
+    <script src="./js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="./js/plugins/flot/jquery.flot.resize.js"></script>
+
+    <script src="js/demos/charts/line.js"></script>
+    <script src="js/demos/charts/donut.js"></script>
+
+    <script>
+
+        $(function () {
+
+            Theme.init ();
+
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        var arr = [];
+        $(function () {
+            $.get(
+                'score/courseMessage',
+                function (data) {
+                    console.log(data);
+                    $.each(data,function (i,val) {
+                        arr.push(parseInt(val.studentnum));
+                    })
+                    // 基于准备好的dom，初始化echarts实例
+                    var myChart = echarts.init(document.getElementById('main'));
+
+                    // 指定图表的配置项和数据
+                    var option = {
+                        title: {
+                            text: '学生选课情况'
+                        },
+                        tooltip: {},
+                        legend: {
+                            data:['选择人数']
+                        },
+                        xAxis: {
+                            data: ["高等数学","大学物理","数据结构","操作系统","数字逻辑",
+                                "虚拟现实","汇编语言","大学英语","健康教育","软件工程"]
+                        },
+                        yAxis: {},
+                        series: [{
+                            name: '选择人数',
+                            type: 'bar',
+                            data: arr
+                        }]
+                    };
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(option);
+                }
+            )
+
+        })
+    </script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+    <script type="text/javascript">
+        var arr = [];
+        var strArr = [];
+        $(function () {
+            $.get(
+                'student/placeMessage',
+                function (data) {
+                    $.each(data,function (i,val) {
+                        arr.push(parseInt(val.num));
+                        strArr.push(val.place);
+                    })
+                    var dom = document.getElementById("container");
+                    var myChart = echarts.init(dom);
+                    option = null;
+                    option = {
+                        title : {
+                            text: '地区分布图',
+                            x:'center'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            left: 'left',
+                            data: strArr
+                            //data: ['北京','吉林','四川','天津','宁夏','安徽','山东','山西','广东','广西','新疆','江苏','江西','河北','河南','浙江','海南','湖北','湖南','甘肃','福建','辽宁','重庆','黑龙江']
+                        },
+                        series : [
+                            {
+                                name: '访问来源',
+                                type: 'pie',
+                                radius : '55%',
+                                center: ['50%', '50%'],
+                                data:[
+                                    {value:3, name:'北京'},
+                                    {value:6, name:'吉林'},
+                                    {value:6, name:'四川'},
+                                    {value:22, name:'天津'},
+                                    {value:2, name:'宁夏'},
+                                    {value:6, name:'安徽'},
+                                    {value:9, name:'山东'},
+                                    {value:9, name:'山西'},
+                                    {value:3, name:'广东'},
+                                    {value:4, name:'广西'},
+                                    {value:4, name:'新疆'},
+                                    {value:4, name:'江苏'},
+                                    {value:6, name:'江西'},
+                                    {value:13, name:'河北'},
+                                    {value:9, name:'河南'},
+                                    {value:3, name:'浙江'},
+                                    {value:2, name:'海南'},
+                                    {value:5, name:'湖北'},
+                                    {value:4, name:'湖南'},
+                                    {value:3, name:'甘肃'},
+                                    {value:5, name:'福建'},
+                                    {value:7, name:'辽宁'},
+                                    {value:3, name:'重庆'},
+                                    {value:4, name:'黑龙江'}
+                                ],
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    if (option && typeof option === "object") {
+                        myChart.setOption(option, true);
+                    }
+                }
+            )
+        })
+
+    </script>
+    <script type="text/javascript">
+        var arr2 = [];
+        var strArr2 = [];
+        $(function () {
+            $.get(
+                'student/genderMessage',
+                function (data) {
+                    $.each(data,function (i,val) {
+                        arr2.push(parseInt(val.num));
+                        strArr2.push(val.gender);
+                    })
+                    var dom = document.getElementById("container_gender");
+                    var myChart = echarts.init(dom);
+                    option = null;
+                    option = {
+                        title : {
+                            text: '男女比例图',
+                            x:'center'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            left: 'left',
+                            data: strArr
+
+                        },
+                        series : [
+                            {
+                                name: '访问来源',
+                                type: 'pie',
+                                radius : '55%',
+                                center: ['50%', '50%'],
+                                data:[
+                                    {value:arr2[0], name:strArr2[0]},
+                                    {value:arr2[1], name:strArr2[1]}
+                                ],
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    if (option && typeof option === "object") {
+                        myChart.setOption(option, true);
+                    }
+                }
+            )
+        })
+    </script>
+    <script type="text/javascript">
+        var arr3 = [];
+        var strArr3 = [];
+        $(function () {
+            $.get(
+                'student/nationMessage',
+                function (data) {
+                    $.each(data,function (i,val) {
+                        arr3.push(parseInt(val.num));
+                        strArr3.push(val.nation);
+                    })
+                    var dom = document.getElementById("container_nation");
+                    var myChart = echarts.init(dom);
+                    option = null;
+                    option = {
+                        title : {
+                            text: '民族分布图',
+                            x:'center'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            left: 'left',
+                            data: strArr
+
+                        },
+                        series : [
+                            {
+                                name: '访问来源',
+                                type: 'pie',
+                                radius : '55%',
+                                center: ['50%', '50%'],
+                                data:[
+                                    {value:arr3[0], name:strArr3[0]},
+                                    {value:arr3[1], name:strArr3[1]},
+                                    {value:arr3[2], name:strArr3[2]},
+                                    {value:arr3[3], name:strArr3[3]},
+                                    {value:arr3[4], name:strArr3[4]}
+                                ],
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    if (option && typeof option === "object") {
+                        myChart.setOption(option, true);
+                    }
+                }
+            )
+        })
+    </script>
+</head>
+
+<body>
+    <h1 align="center">学生信息统计</h1>
+    <br /><br />
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style=" height:600px;"></div>
+    <div id="container" style="height: 600px"></div>
+
+    <div style="display: flex">
+        <div id="container_gender" style="width:500px;height:500px;flex:1"></div>
+        <div id="container_nation" style="width:500px;height:500px;flex:1"></div>
+    </div>
+
+
+</body>
+</html>

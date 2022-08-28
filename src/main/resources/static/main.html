@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>主页</title>
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+		<style type="text/css">
+			a{
+				color:gray;
+			}
+			a:hover{
+				text-decoration:none ;
+			}
+		</style>
+		<script type="text/javascript" src="bootstrap/js/jquery-3.2.1.min.js" charset="UTF-8" ></script>
+		<script type="text/javascript" src="bootstrap/js/bootstrap.min.js" charset="UTF-8" ></script>
+		<script> //根据窗口宽度调整页面显示
+		$(function(){
+			$(window).on("resize load",function() {
+				$("body").css({
+					"padding-top": $(".navbar").height() + "px"
+				});
+			});
+
+			$("#exitA").click(function () {
+				sessionStorage.clear() ;
+				$.get(
+						'user/exit' ,
+						function (response) {
+							location.href = "login.html" ;
+						}
+				);
+			});
+		})
+		</script>
+	</head>
+	<body>
+		<!--标题-->
+		<div class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="pull-left">
+					<h2>学生信息管理系统</h2>
+				</div>
+				<div class="pull-right">
+					<div class="dropdown ">
+						<button type="button" class="btn btn-default" style="margin-right: 80px; margin-top: 21px;" data-toggle="dropdown">
+							<span id="qqq">用户中心</span><span class="caret" ></span>
+			    		</button>
+						<ul class="dropdown-menu">
+							<li><a href="geren.html">个人主页</a></li>
+							<li><a href="javascript:void(0)" id="exitA">退出</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--标题结束-->
+        <!--左侧菜单-->
+		<div class="pull-left" style="width:15vw;">
+			<div class="panel panel-default" style="height:90vh;">
+				<div class="panel-body" style="height:90vh ;">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<a href="shouye.html" target="right" ><span class="glyphicon glyphicon-home"></span>&nbsp;主页</a>
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<a href="#hide1" data-toggle="collapse"><span class="glyphicon glyphicon-list"></span>&nbsp;用户管理</a>
+						</div>
+						
+						<div id="hide1" class="collapse panel-collapse">
+							<div class="panel-body">
+								<div class="list-group">
+									<a href="mima.html" class="list-group-item" target="right">修改密码</a>
+									<a href="touxiang.html" class="list-group-item" target="right">上传头像</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<a href="#hide2" data-toggle="collapse"><span class="glyphicon glyphicon-list"></span>&nbsp;学生信息及课程管理</a>
+						</div>
+						
+						<div id="hide2" class="collapse panel-collapse">
+							<div class="panel-body">
+								<div class="list-group">
+									<a href="student.html" class="list-group-item" target="right">学生信息统计</a>
+									<a href="course.html" class="list-group-item" target="right">学生课程操作</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<a href="#hide3" data-toggle="collapse"><span class="glyphicon glyphicon-list"></span>&nbsp;数据统计</a>
+						</div>
+						
+						<div id="hide3" class="collapse panel-collapse">
+							<div class="panel-body">
+									<div class="list-group">
+										<a href="message.html" class="list-group-item" target="right">学生信息统计</a>
+									</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--左侧菜单结束-->
+		
+		
+		<!--右侧-->
+		<div class="pull-left" style="margin-left: 5px; width: 83vw;">
+			<iframe name="right" src="shouye.html" style="width: 100%; height: 92vh;" frameborder="no" border="no" scrolling="yes"></iframe>
+		</div>
+		<!--右侧结束-->
+		<!--底部-->
+		<div class="navbar navbar-default navbar-fixed-bottom">
+			<div class="container text-center">
+				<h6>学生信息管理系统</h6>
+			</div>
+		</div>
+	</body>
+</html>

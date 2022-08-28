@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tju.manager.dao.ScoreDao">
+    <select id="getScore" resultType="Connect">
+        select tb_student.id,tb_student.name,tb_course.id as courseid,tb_course.name as coursename,tb_score.score,tb_course.credit
+        from tb_score,tb_student,tb_course
+        <where>
+            and tb_student.id = tb_score.studentid
+            and tb_course.id = tb_score.courseid
+            <if test="null != id">
+                and tb_student.id = #{id}
+            </if>
+            <if test="null != name">
+                and tb_student.name = #{name}
+            </if>
+
+        </where>
+    </select>
+
+    <insert id="chooseCourse" >
+        insert into tb_score (studentid,courseid)
+        values (#{studentid},#{courseid})
+    </insert>
+
+    <delete id="quitCourse" >
+        delete from tb_score
+        where studentid=#{studentid} and courseid = #{courseid}
+    </delete>
+    
+    <update id="enterScore">
+        update tb_score
+        set score = #{score}
+        where studentid=#{studentid} and courseid = #{courseid}
+    </update>
+</mapper>

@@ -1,0 +1,110 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"><![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><html class="no-js" lang="en"><![endif]-->
+<html>
+	<head>
+	<meta charset="utf-8">	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+
+	<link rel="stylesheet" href="css/font-awesome.css">
+	
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/bootstrap-responsive.css">
+
+	<link rel="stylesheet" href="./css/ui-lightness/jquery-ui-1.8.21.custom.css">	
+	
+	<link rel="stylesheet" href="css/application.css">
+	<link rel="stylesheet" href="css/pages/dashboard.css">
+	
+	<script type="text/javascript" src="bootstrap/js/jquery-3.2.1.min.js" charset="UTF-8" ></script>
+	<script type="text/javascript" src="bootstrap/js/bootstrap.min.js" charset="UTF-8" ></script>
+	<script src="js/libs/modernizr-2.5.3.min.js"></script>
+
+
+
+</head>
+
+	<body>
+	<div id="content">
+		<div class="container">
+			<div class="row" style="display: flex">
+				<div class="span4" style="flex:1">
+					<h1>欢迎: &nbsp;<div id="qqq"></div></h1>
+					<table class="table stat-table">
+						<tbody>
+							<tr>
+								<td class="value" id="sumStudent"></td>
+								<td class="full">学生数目</td>
+							</tr>
+							<tr>
+								<td class="value" id="sumCourse"></td>
+								<td class="full">课程数目</td>
+							</tr>
+							<tr>
+								<td class="value" id="sumUser"></td>
+								<td class="full">用户数目</td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- /.span4 -->
+				<div class="img" style="flex:1">
+					<img src="school.png" class="img-responsive">
+				</div> <!-- /.img -->
+			</div> <!-- /.row -->
+		</div> <!-- /.container -->
+	</div> <!-- /#content -->
+
+<script src="js/libs/jquery-1.7.2.min.js"></script>
+<script src="js/libs/jquery-ui-1.8.21.custom.min.js"></script>
+<script src="js/libs/jquery.ui.touch-punch.min.js"></script>
+
+<script src="js/libs/bootstrap/bootstrap.min.js"></script>
+
+<script src="js/Theme.js"></script>
+<script src="js/Charts.js"></script>
+
+<script src="./js/plugins/excanvas/excanvas.min.js"></script>
+<script src="./js/plugins/flot/jquery.flot.js"></script>
+<script src="./js/plugins/flot/jquery.flot.pie.js"></script>
+<script src="./js/plugins/flot/jquery.flot.orderBars.js"></script>
+<script src="./js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+<script src="./js/plugins/flot/jquery.flot.resize.js"></script>
+
+<script src="js/demos/charts/line.js"></script>
+<script src="js/demos/charts/donut.js"></script>
+<script>
+$(function () {
+	Theme.init ();
+});
+</script>
+
+	<script type="text/javascript">
+		$(function(){
+			document.getElementById('qqq').textContent=sessionStorage.getItem("userName");
+
+			$.get(
+					'student/sumStudent',
+					function (data) {
+						document.getElementById('sumStudent').textContent = data;
+					}
+			);
+			$.get(
+					'student/sumCourse',
+					function (data) {
+						document.getElementById('sumCourse').textContent = data;
+					}
+			);
+			$.get(
+					'user/sumUser',
+					function (data) {
+						document.getElementById('sumUser').textContent = data;
+					}
+			);
+		})
+	</script>
+
+</body>
+</html>

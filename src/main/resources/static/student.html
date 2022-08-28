@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>学生信息统计</title>
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+		<script type="text/javascript" src="bootstrap/js/jquery-3.2.1.min.js" charset="UTF-8" ></script>
+		<script type="text/javascript" src="bootstrap/js/bootstrap.min.js" charset="UTF-8" ></script>
+		<script>
+			function del(){
+				alert('确认删除！');
+			}
+		</script>
+		<script>//判断是否已经登录
+		$(function () {
+			$.get(
+					'user/iflogin' ,
+					function (response) {
+						if(null == response || response == "") {
+							alert("请先登录!") ;
+							location.href = "login.html" ;
+						}
+					}
+			);
+		})
+
+		$(function () {
+			$("#getAllMessages").click(function(){
+				$.get(
+						'student/getAll',
+						function (data) {
+							var str = "";
+							$.each(data,function (i,val) {
+								str += "<tr>" +
+										"<td align='center'>" + val.id + "</td>" +
+										"<td align='center'>" + val.name + "</td>" +
+										"<td align='center'>" + val.gender + "</td>" +
+										"<td align='center'>" + val.nation + "</td>" +
+										"<td align='center'>" + val.place + "</td>" +
+										"<td align='center'>" + val.birth + "</td>" ;
+							})
+							tbody.innerHTML = str;
+						}
+				)}
+			)
+		})
+		</script>
+	</head>
+	<body>
+		<div class="alert" style="background: #ddd;padding: 5px;">
+			<a href="shouye.html">主页</a>>>>>>>>><a href="student.html">学生信息统计</a>
+		</div>
+			
+		<div style="margin-left: 5px;">
+			<div class="panel panel-default">
+				<div class=" panel-body">
+					<button type="button" class="form-control btn-primary" id="getAllMessages">查看所有学生的基本信息</button>
+					<table class="table table-condensed table-hover table-bordered table-striped" id="table" align='center'><br />
+					<thead>
+					<tr >
+						<th>学号</th>
+						<th>姓名</th>
+						<th>性别</th>
+						<th>家乡</th>
+						<th>民族</th>
+						<th>生日</th>
+					</tr>
+					</thead>
+					<tbody id="tbody" ></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

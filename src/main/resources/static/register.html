@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>用户注册</title>
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+		<script src="bootstrap/js/jquery-3.2.1.min.js" type="text/javascript" charset="UTF-8"></script>
+	    <script src="bootstrap/js/bootstrap.min.js" type="text/javascript" charset="UTF-8"></script>
+		<style type="text/css">
+			#form label{
+				margin-bottom: 0px;
+				margin-top: 7px;
+				text-align: right;
+			}
+
+			body{
+				background: url("/img/1.jpg");
+				background-size: 100%;
+				background-repeat: no-repeat;
+				animation-name:myfirst;
+				animation-duration:12s;
+				/*变换时间*/
+				animation-delay:2s;
+				/*动画开始时间*/
+				animation-iteration-count:infinite;
+				/*下一周期循环播放*/
+				animation-play-state:running;
+				/*动画开始运行*/
+			}
+			@keyframes myfirst
+			{
+				0%   {background:url("/img/1.jpg");}
+				34%  {background:url("/img/2.jpg");}
+				67%  {background:url("/img/3.jpg");}
+				100% {background:url("/img/1.jpg");}
+			}
+
+			#login_frame {
+				width: 400px;
+				height: 260px;
+				padding: 13px;
+
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				margin-left: -200px;
+				margin-top: -200px;
+
+				background-color: rgba(240, 255, 255, 0.5);
+
+				border-radius: 10px;
+				text-align: center;
+			}
+		</style>
+		<script>
+			//注册功能
+			$(function(){
+				var code;
+				$('#checkCode').click(function(){
+					var random = new Array(0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H','I','J','K','L','M',
+							'N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+					code ='';
+					for(var i=0; i<4; i++){
+
+						code += random[Math.floor(Math.random()*36)];
+					}
+					$(this).val(code);
+
+				});
+				$('#checkCode').trigger('click');
+
+				nameValid = false ;
+				//检查用户名
+				$("#inputname").blur(function(){
+					$.get(
+							"user/namecheck" ,
+							{name : $("#inputname").val()} ,
+							function(data){
+								if(! data.valid) {
+									alert("用户名已存在！") ;
+									nameValid = false ;
+								} else {
+									nameValid = true ;
+								}
+							}
+					);
+				}) ;
+				passValid = false;
+				//检查 密码--确认密码 是否相同
+				$("#checkpwd").blur(function(){
+					pass1 = $("#inputpwd").val();
+					pass2 = $("#checkpwd").val();
+					if(pass1 === pass2){
+						passValid = true;
+					}else {
+						alert("密码不相同！");
+					}
+				}) ;
+				$('#form').submit(function(){
+					//判断是否可以登录，true/false
+					var flag=true;
+
+					//邮箱验证
+					var $email =$('#email');
+					var checkEmail = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_]+(.[a-zA-Z0-9_]+)+$/;
+					if (!$email.val()){
+						$email.next().text('邮箱不能为空!');
+						flag=false;
+					}else if(!checkEmail.test($email.val())){
+						//正则表达式验证邮箱
+						$email.next().text('邮箱格式不正确');
+						flag=false;
+					}else{
+						$email.next().empty();
+						flag=true;
+					}
+
+
+					//手机号验证
+					var $phoneNumber=$('#phoneNumber');
+					//手机格式
+					var checkPhoneNumber=/^[0-9]{11}$/;
+					if(!$phoneNumber.val()){
+						$phoneNumber.next().text('手机号不能为空');
+						flag=false;
+					}else if(!checkPhoneNumber.test($phoneNumber.val())){
+						$phoneNumber.next().text('手机号格式不正确');
+						flag=false;
+					}else{
+						$phoneNumber.next().empty();
+						flag=true;
+					}
+
+					var $uname=$('#uname');
+					var checkuname=/^[a-zA-Z0-9_-]+$/;
+					if(!$uname.val()){
+						$uname.next().text('用户名不能为空');
+						flag=false;
+					}else if(!checkuname.test($uname.val())){
+						$uname.next().text('用户名格式不正确');
+						flag=false;
+					}else{
+						$uname.next().empty();
+						flag=true;
+					}
+
+					var $pwd=$('#pwd');
+					if(!$pwd.val()){
+						$pwd.next().text('密码不能为空');
+						flag=false;
+					}else{
+						$pwd.next().empty();
+						flag=true;
+					}
+
+					var $condirmPwd=$('#condirmPwd');
+					if(!$condirmPwd.val()){
+						$condirmPwd.next().text('密码不能为空');
+						flag=false;
+					}else{
+						$condirmPwd.next().empty();
+						flag=true;
+					}
+
+					var $inputCode = $('#inputCode');
+					if(code !=$inputCode.val().toUpperCase()){
+						$inputCode.parent().next().text('验证码不正确');
+						flag=false;
+					}else{
+						$inputCode.parent().next().empty();
+						flag=true;
+					}
+
+					if(flag){
+						if(passValid == true && nameValid == true){
+							$.get("user/register",
+									{username: $("#inputname").val(),
+									 password: $("#inputpwd").val(),
+									 phone: $("#phoneNumber").val(),
+									 email: $("#email").val()},
+									function(data){
+										if(null == data || "" == data) {
+											alert("注册失败!") ;
+										} else {
+											location.href = "login.html";
+										}
+									}
+							);
+						}else {
+							alert("注册失败！");
+						}
+					}
+					return false;
+				});
+			})
+		</script>
+	</head>
+	<body>
+		<div>
+			<div class="container" style="width: 500px; margin-top: 100px;">
+				<h2 class="text-center"><font size="20" color="white">用户注册</font></h2>
+				<br /><br /><br />
+				<form id="form" class="form-horizontal">
+					<div class="form-group">
+						<label for="inputname" class="col-md-3"><font size="4" color="white">用户名</font></label>
+						<div class="col-md-9">
+							<input id="inputname" name="username" type="text" class="form-control" minlength="1"/>
+							<span style="color: red;"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputpwd" class="col-md-3"><font size="4" color="white">密码</font></label>
+						<div class="col-md-9">
+							<input id="inputpwd" name="password" type="password" class="form-control" minlength="6" />
+							<span style="color: red;"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="checkpwd" class="col-md-3"><font size="4" color="white">确认密码</font></label>
+						<div class="col-md-9">
+							<input id="checkpwd" name="password2" type="password" class="form-control" minlength="6" />
+							<span style="color: red;"></span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="email" class="col-md-3"><font size="4" color="white">邮箱</font></label>
+						<div class="col-md-9">
+							<input id="email" name="email" type="text" class="form-control" />
+							<span style="color: red;"></span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="phoneNumber" class="col-md-3"><font size="4" color="white">手机号码</font></label>
+						<div class="col-md-9">
+							<input id="phoneNumber" name="phoneNumber" type="text" class="form-control" />
+							<span style="color: red;"></span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="inputCode" class="col-md-3"><font size="4" color="white">验证码</font></label>
+						<div class="col-md-9">
+							<div class="form-inline">
+								<input id="inputCode" name="inputCode" type="text" class="form-control" />
+								<input id="checkCode" type="button" class="form-control btn-primary" />
+							</div>
+							<span style="color: red;"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-danger form-control" id="submit">确认注册</button>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-warning form-control"><a href="login.html">返回登陆</a></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
